@@ -1,0 +1,12 @@
+###
+
+POST http://localhost:3000/add-jobs HTTP/1.1
+Content-Type: application/json
+
+{
+    "name": "Coding",
+    "point": 10,
+    "location": "WFH"
+}
+
+###
