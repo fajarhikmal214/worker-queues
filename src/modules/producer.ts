@@ -1,12 +1,26 @@
-import { Queue } from 'bullmq';
+import { Queue, QueueOptions, JobsOptions } from 'bullmq';
 import { QueueName } from '../config/queue-name';
 import { redisOption } from '../config/redis-config';
-import { addJobsInterface } from '../interfaces/add-jobs.interfaces';
+import { addJobsInterface } from '../interfaces/jobs.interfaces';
 
-const myQueue = new Queue(QueueName, {
+const queueOptions: QueueOptions = {
   connection: redisOption,
-});
+};
 
-export const addJobs = async (name: string, data: addJobsInterface) => {
-  return await myQueue.add(name, data);
+export const queues = new Queue(QueueName, queueOptions);
+
+const jobOptions: JobsOptions = {
+  attempts: 3,
+  backoff: {
+    type: 'exponential',
+    delay: 2000, // 2, 4, 8 seconds
+  },
+};
+
+export const addJobs = async (job: addJobsInterface) => {
+  await queues.add(job.type, job);
+};
+
+export const addJobsWithOptions = async (job: addJobsInterface) => {
+  await queues.add(job.type, job, jobOptions);
 };
