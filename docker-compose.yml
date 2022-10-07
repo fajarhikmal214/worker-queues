@@ -1,0 +1,8 @@
+version: '3'
+services:
+  redis:
+    container_name: redis-server
+    image: redis:6
+    restart: always
+    ports:
+      - 5000:6379
